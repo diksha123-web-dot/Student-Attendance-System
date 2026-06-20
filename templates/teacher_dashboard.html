@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teacher Dashboard</title>
+    <style>
+        body {
+            background-color: #f5f7ed; /* light cream with greenish tint */
+            font-family: Arial, sans-serif;
+            color: #2f4f2f; /* dark green text */
+        }
+        .container {
+            width: 90%;
+            margin: 40px auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(47, 79, 47, 0.2); /* subtle green shadow */
+        }
+        h2 {
+            text-align: center;
+            color: #4a7c3b; /* medium green */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 25px;
+            color: #2f4f2f;
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #c4d1b0; /* light green border */
+        }
+        th {
+            background-color: #7bb661; /* medium light green */
+            color: white;
+        }
+        img {
+            width: 100px;
+            border-radius: 8px;
+            border: 2px solid #a9c77a; /* subtle green border on images */
+        }
+        .logout {
+            text-align: right;
+            margin-bottom: 15px;
+        }
+        .logout a {
+            color: #4a7c3b;
+            text-decoration: none;
+            font-weight: bold;
+            transition: text-decoration 0.3s ease;
+        }
+        .logout a:hover {
+            text-decoration: underline;
+        }
+
+        /* Delete Button */
+        .delete-form button {
+            background-color: #e74c3c;
+            color: white;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .delete-form button:hover {
+            background-color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logout">
+            Logged in as {{ teacher_name }} | <a href="/logout">Logout</a>
+        </div>
+        <h2>All Student Attendance Records</h2>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Photo</th>
+                <th>Location</th>
+                <th>Timestamp</th>
+                <th>Action</th> <!-- New column -->
+            </tr>
+            {% for record in attendance_data %}
+            <tr>
+                <td>{{ record.name }}</td>
+                <td>{{ record.email }}</td>
+                <td>
+                    <img src="{{ url_for('static', filename='uploads/' + record.photo) }}" alt="Selfie">
+                </td>
+                <td>{{ record.location }}</td>
+                <td>{{ record.timestamp }}</td>
+                <td>
+                    <form class="delete-form" action="/delete_attendance/{{ record.id }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this record?');">
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>

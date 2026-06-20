@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dashboard - Student Attendance</title>
+    <style>
+        body {
+            background-color: #f5efe6; /* light beige/brown background */
+            font-family: 'Arial', sans-serif;
+            color: #4b3b2b; /* dark brown text */
+        }
+        .container {
+            width: 90%;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 40px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(75, 59, 43, 0.2); /* subtle brown shadow */
+        }
+        h2 {
+            color: #7b5e2b; /* medium brown */
+        }
+        .tab {
+            overflow: hidden;
+            border-bottom: 2px solid #7b5e2b;
+        }
+        .tab button {
+            background-color: #fff;
+            float: left;
+            border: none;
+            outline: none;
+            padding: 12px 24px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            font-size: 16px;
+            color: #7b5e2b;
+            font-weight: bold;
+        }
+        .tab button:hover {
+            background-color: #7b5e2b;
+            color: white;
+        }
+        .tab button.active {
+            background-color: #7b5e2b;
+            color: white;
+        }
+        .tabcontent {
+            display: none;
+            padding: 20px 0;
+        }
+        .tabcontent.active {
+            display: block;
+        }
+        input, label {
+            margin: 10px 0;
+            display: block;
+            width: 100%;
+            max-width: 400px;
+            padding: 10px;
+            border: 1px solid #b9a47c;
+            border-radius: 5px;
+            font-size: 14px;
+            color: #4b3b2b;
+        }
+        input:focus {
+            border-color: #a07a3a;
+            outline: none;
+            background-color: #fff8e1;
+        }
+        button, input[type=submit] {
+            padding: 12px 24px;
+            font-size: 16px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #a07a3a; /* warm brown */
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover, input[type=submit]:hover {
+            background-color: #7b5e2b; /* darker brown */
+        }
+        .flash-message {
+            color: #7b5e2b;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        table, th, td {
+            border: 1px solid #d6c9a8;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+            color: #4b3b2b;
+        }
+        th {
+            background-color: #a07a3a;
+            color: white;
+        }
+        td img {
+            border-radius: 5px;
+            width: 80px;
+            height: auto;
+        }
+        a.logout {
+            float: right;
+            padding: 12px;
+            color: #c14c26; /* brick red */
+            font-weight: bold;
+            text-decoration: none;
+        }
+        a.logout:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Welcome, {{ name }}</h2>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="flash-message">
+              {% for message in messages %}
+                <p>{{ message }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        <div class="tab">
+            <button class="tablinks active" onclick="openTab(event, 'submit')">📍 Submit Attendance</button>
+            <button class="tablinks" onclick="openTab(event, 'history')">📊 Attendance History</button>
+            <button class="tablinks" onclick="openTab(event, 'profile')">🧑‍🎓 Profile</button>
+            <button class="tablinks" onclick="openTab(event, 'changepassword')">🔒 Change Password</button>
+            <a class="logout" href="/logout">Logout</a>
+        </div>
+
+        <!-- Submit Attendance Tab -->
+        <div id="submit" class="tabcontent active">
+            <h3>Submit Attendance</h3>
+            <form method="POST" action="/submit_attendance" enctype="multipart/form-data">
+                <label>Take Selfie:</label>
+                <input type="file" name="photo" accept="image/*" capture="user" required>
+
+                <label>Your Location (Latitude, Longitude):</label>
+                <input type="text" id="location" name="location" readonly required>
+
+                <input type="submit" value="Submit Attendance">
+            </form>
+        </div>
+
+        <!-- Attendance History Tab -->
+        <div id="history" class="tabcontent">
+            <h3>Attendance History</h3>
+            {% if attendance_records %}
+                <table>
+                    <tr>
+                        <th>Date & Time</th>
+                        <th>Location</th>
+                        <th>Photo</th>
+                    </tr>
+                    {% for record in attendance_records %}
+                    <tr>
+                        <td>{{ record.timestamp }}</td>
+                        <td>{{ record.location }}</td>
+                        <td><img src="{{ url_for('static', filename='uploads/' + record.photo) }}" alt="Attendance Photo"></td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p>No attendance records yet.</p>
+            {% endif %}
+        </div>
+
+        <!-- Profile Tab -->
+        <div id="profile" class="tabcontent">
+            <h3>Your Profile</h3>
+            <p><strong>Name:</strong> {{ name }}</p>
+            <p><strong>Email:</strong> {{ email }}</p>
+        </div>
+
+        <!-- Change Password Tab -->
+        <div id="changepassword" class="tabcontent">
+            <h3>Change Password</h3>
+            <form method="POST" action="/change_password">
+                <label>Old Password:</label>
+                <input type="password" name="old_password" required>
+                <label>New Password:</label>
+                <input type="password" name="new_password" required>
+                <label>Confirm New Password:</label>
+                <input type="password" name="confirm_password" required>
+                <input type="submit" value="Change Password">
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching
+        function openTab(evt, tabName) {
+            const tabcontent = document.querySelectorAll(".tabcontent");
+            const tablinks = document.querySelectorAll(".tablinks");
+
+            tabcontent.forEach(tab => tab.classList.remove("active"));
+            tablinks.forEach(btn => btn.classList.remove("active"));
+
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        // Auto-fill location
+        window.onload = function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(pos) {
+                    document.getElementById("location").value =
+                        pos.coords.latitude + ", " + pos.coords.longitude;
+                }, function(err) {
+                    console.warn('Geolocation error:', err.message);
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        };
+    </script>
+</body>
+</html>

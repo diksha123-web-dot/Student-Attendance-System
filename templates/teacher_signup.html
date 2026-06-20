@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teacher Signup</title>
+    <style>
+        body {
+            background-color: #f5f5dc; /* Cream background */
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            width: 350px;
+            margin: 100px auto;
+            padding: 30px;
+            background-color: #ffffff; /* White container */
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(34, 85, 34, 0.15); /* subtle green shadow */
+            text-align: center;
+        }
+        input {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #a3c293; /* soft green border */
+            font-size: 14px;
+            color: #355e3b;
+        }
+        input:focus {
+            border-color: #4caf50; /* bright green on focus */
+            outline: none;
+            background-color: #eaf6ea; /* light green tint */
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4caf50; /* green button */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #3a8c3a; /* darker green on hover */
+        }
+        a {
+            text-decoration: none;
+            color: #4caf50; /* green links */
+            font-weight: bold;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .flash {
+            color: #cc0000; /* red for errors */
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 style="color:#355e3b;">Teacher Signup</h2>
+
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="flash">
+              {% for message in messages %}
+                <p>{{ message }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+            <input type="text" name="name" placeholder="Full Name" required><br>
+            <input type="email" name="email" placeholder="Email" required><br>
+            <input type="password" name="password" placeholder="Password" required><br>
+            <button type="submit">Sign Up</button>
+        </form>
+        <p>Already have an account? <a href="/teacher_login">Login here</a>.</p>
+        <p><a href="/login_choice">Back to Login Options</a></p>
+    </div>
+</body>
+</html>

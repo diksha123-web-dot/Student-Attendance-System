@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Portal</title>
+    <style>
+        body {
+            background-color: #f8f3e8; /* Light beige */
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            width: 350px;
+            margin: 120px auto;
+            padding: 30px;
+            background-color: #fffdf7; /* very light cream */
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(180, 140, 100, 0.2); /* soft beige shadow */
+            text-align: center;
+        }
+        h2 {
+            color: #000000; /* black */
+            margin-bottom: 25px;
+        }
+        a.button {
+            display: block;
+            margin: 15px 0;
+            padding: 14px;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+            border-radius: 8px;
+            transition: background 0.3s, box-shadow 0.3s;
+        }
+
+        /* Student Login Button - Brown */
+        .student {
+            background-color: #8b4513; /* SaddleBrown */
+            box-shadow: 0 0 8px rgba(139, 69, 19, 0.3);
+        }
+        .student:hover {
+            background-color: #5e2e0f;
+        }
+
+        /* Teacher Login Button - Green */
+        .teacher {
+            background-color: #4caf50; /* Green */
+            box-shadow: 0 0 8px rgba(76, 175, 80, 0.3);
+        }
+        .teacher:hover {
+            background-color: #388e3c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Welcome to the Attendance Portal</h2>
+        <a href="/login" class="button student">Student Login</a>
+        <a href="/teacher_login" class="button teacher">Teacher Login</a>
+    </div>
+</body>
+</html>
